@@ -80,6 +80,10 @@ sound_count() {
   grep -c '^sound .*complete\.oga' "$test_log" || true
 }
 
+input_sound_count() {
+  grep -c '^sound .*bell\.oga' "$test_log" || true
+}
+
 non_completion_sound_count() {
   awk '/^sound / && $0 !~ /complete\.oga/ { count++ } END { print count + 0 }' "$test_log"
 }
@@ -183,7 +187,9 @@ assert_equal working "$(state)" 'auto-approved permission resumes the spinner'
 run_hook copilot-tool-input.sh '{"session_id":"parent-session","tool_name":"AskUserQuestion"}'
 assert_equal input "$(state)" 'input tool pauses the spinner'
 assert_equal 1 "$(agent_count)" 'waiting agent remains tracked'
-assert_equal 0 "$(non_completion_sound_count)" 'input tool stays silent'
+assert_equal 1 "$(input_sound_count)" 'input tool sounds once'
+run_hook copilot-tool-input.sh '{"session_id":"parent-session","tool_name":"AskUserQuestion"}'
+assert_equal 1 "$(input_sound_count)" 'duplicate input event stays silent'
 run_hook copilot-input-answered.sh '{"session_id":"parent-session","tool_name":"AskUserQuestion"}'
 assert_equal working "$(state)" 'answer resumes the spinner'
 run_hook copilot-done.sh "$parent"

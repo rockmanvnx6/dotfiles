@@ -7,8 +7,10 @@ hook_debug
 hook_in_tmux || exit 0
 hook_lock_window || exit 0
 if hook_is_input_tool; then
+  state="$(hook_state_read)"
   hook_agent_mark_active
   hook_render_static input "$hook_marker_input" "$hook_style_input" "$(hook_session_name)"
+  [ "$state" = input ] || hook_play "$hook_sound_input"
 else
   state="$(hook_state_read)"
   if [ "$state" = working ]; then
