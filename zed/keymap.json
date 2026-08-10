@@ -36,6 +36,7 @@
   {
     "context": "Editor && vim_mode == normal",
     "bindings": {
+      "ctrl-f": "buffer_search::Deploy",
       "ctrl-`": "workspace::ToggleBottomDock",
       "space s g": "text_finder::Toggle",
       "g r r": "editor::FindAllReferences",
